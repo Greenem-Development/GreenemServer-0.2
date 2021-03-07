@@ -1,0 +1,72 @@
+package kernitus.plugin.OldCombatMechanics.utilities.damage;
+
+import kernitus.plugin.OldCombatMechanics.OCMMain;
+import kernitus.plugin.OldCombatMechanics.module.Module;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+
+public class EntityDamageByEntityListener extends Module {
+	private static EntityDamageByEntityListener INSTANCE;
+	private boolean enabled;
+
+	public EntityDamageByEntityListener(OCMMain plugin) {
+		super(plugin, "entity-damage-listener");
+		INSTANCE = this;
+	}
+
+	public static EntityDamageByEntityListener getINSTANCE() {
+		return INSTANCE;
+	}
+
+	public boolean isEnabled() {
+		return this.enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	public void onEntityDamage(EntityDamageByEntityEvent event) {
+		Entity damager = event.getDamager();
+		OCMEntityDamageByEntityEvent e = new OCMEntityDamageByEntityEvent(damager, event.getEntity(), event.getCause(),
+				event.getDamage());
+		this.plugin.getServer().getPluginManager().callEvent(e);
+		if (!e.isCancelled()) {
+			double newDamage = e.getBaseDamage();
+			this.debug("Base: " + e.getBaseDamage(), damager);
+			double weaknessModifier = e.getWeaknessModifier();
+			if (e.isWeaknessModifierMultiplier()) {
+				newDamage *= weaknessModifier;
+			} else {
+				newDamage += weaknessModifier;
+			}
+
+			this.debug("Weak: " + e.getWeaknessModifier(), damager);
+			this.debug("Strength level: " + e.getStrengthLevel(), damager);
+			double strengthModifier = e.getStrengthModifier() * (double) e.getStrengthLevel();
+			if (!e.isStrengthModifierMultiplier()) {
+				newDamage += strengthModifier;
+			} else if (e.isStrengthModifierAddend()) {
+				newDamage *= ++strengthModifier;
+			} else {
+				newDamage *= strengthModifier;
+			}
+
+			this.debug("Strength: " + strengthModifier, damager);
+			newDamage *= e.getCriticalMultiplier();
+			this.debug("Crit: " + e.getCriticalMultiplier(), damager);
+			newDamage += e.getMobEnchantmentsDamage() + e.getSharpnessDamage();
+			this.debug("Mob " + e.getMobEnchantmentsDamage() + " Sharp: " + e.getSharpnessDamage(), damager);
+			if (newDamage < 0.0D) {
+				this.debug("Damage was " + newDamage + " setting to 0", damager);
+				newDamage = 0.0D;
+			}
+
+			this.debug("New Damage: " + newDamage, damager);
+			event.setDamage(newDamage);
+		}
+	}
+}

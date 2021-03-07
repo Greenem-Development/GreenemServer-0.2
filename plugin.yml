@@ -1,0 +1,94 @@
+name: GreenemServerMainPlugin
+main: me.greenem.server.MainEvents.ServerPlugin
+version: 1.1.1
+api-version: 1.16
+commands:
+   mode:
+      description: Choosing the game mode.
+      default: true
+   hub:
+      description: Teleporting back to the main spawn.
+      default: true
+   spawn:
+      description: Teleporting back to the main spawn.
+      default: true
+   gm:
+      description: Changing the player's gamemode.
+      default: true
+   heal:
+      description: Heals the player.
+      default: true
+   test:
+      description: Test.
+      default: true
+   test2:
+      description: Test.
+      default: true
+   setteam:
+      description: Test.
+      default: true
+   feather:
+      description: Test.
+      default: true
+   setcount:
+      description: Test.
+      default: true
+   v:
+      description: Test.
+      default: true
+   unv:
+      description: Test.
+      permission: TestPlugin.basic
+   chesttocode:
+      description: Test.
+      default: true
+   stringstocode:
+      description: Test.
+      default: true
+   createnps:
+      description: Test.
+      default: true
+   destroynpc:
+      description: Test.
+      default: true
+   fly:
+      description: Test.
+      default: true
+   revive:
+      description: Test.
+      default: true
+   scaffolding:
+      description: Test.
+      default: true
+   register:
+      description: Registration.
+      default: true
+   login:
+      description: Loging in.
+      default: true
+   r:
+      description: Registration.
+      default: true
+   l:
+      description: Loging in.
+      default: true
+   door:
+      description: Loging in.
+      default: true
+   auth:
+      description: Choosing the game mode.
+      default: true
+   backupworld:
+      description: Choosing the game mode.
+      permission: TestPlugin.basic
+   save-world:
+      description: Choosing the game mode.
+      permission: TestPlugin.basic
+   newspawn:
+      description: Choosing the game mode.
+      default: true
+   packetstests:
+      description: Choosing the game mode.
+      default: true
+settings:
+   moved-too-quickly-multiplier: 10000.0
