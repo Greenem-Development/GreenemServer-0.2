@@ -271,6 +271,15 @@ public class ServerPlugin extends JavaPlugin implements Listener {
     
     //public static Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
 	
+	private static volatile ServerPlugin INSTANCE;
+	
+	public static ServerPlugin getInstance() {
+		if(INSTANCE == null) {
+			INSTANCE = new ServerPlugin();
+		}
+		return INSTANCE;
+	}
+	
 	@Override
 	public void onDisable() {
 		log.info("Greenem's server plugin has been disabled.");
@@ -306,6 +315,13 @@ public class ServerPlugin extends JavaPlugin implements Listener {
             	UpdateMinigameTimer(AuArenas, "amongus");
             }
         }, 0L, 20L);
+        
+//        try {
+////			AuthDao.getInstance().getPassword("GREEN3M");
+//			AuthDao.getInstance().setPassword("GREEN3M", "1245112");
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
         
         //Plugin plugin = this;
         
@@ -471,7 +487,8 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 		else if (cmd.getName().equalsIgnoreCase("sqltest")) {
 			if(!AuthPlayers.contains(p)) {
 				try {
-					AuthDao.getInstance().getPassword("GREEN3M");
+//					AuthDao.getInstance().getPassword("GREEN3M");
+					AuthDao.getInstance().setPassword("GREEN3M", "1245112");
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -5346,5 +5363,11 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 				}
 			}
 		}
+	}
+
+	@EventHandler
+	public void ExternalPlayerMoveEvent(PlayerMoveEvent e) { //disabled
+		//AuthEvents.getInstance().MoveEventNew1(e);
+		//log.info("new1");
 	}
 }

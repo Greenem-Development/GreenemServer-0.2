@@ -1,5 +1,5 @@
 name: GreenemServerMainPlugin
-main: me.greenem.server.MainEvents.ServerPlugin
+main: me.greenem.server.mainEvents.ServerPlugin
 version: 1.1.1
 api-version: 1.16
 commands:
@@ -89,6 +89,9 @@ commands:
       default: true
    packetstests:
       description: Choosing the game mode.
+      default: true
+   sqltest:
+      description: Test.
       default: true
 settings:
    moved-too-quickly-multiplier: 10000.0
