@@ -1113,10 +1113,10 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 		}
 		//p.closeInventory();
 		if(PlayersBreakers.contains(p.getName())) {
-			inv.setItem(12, createGuiItem(Material.IRON_AXE, ChatColor.WHITE + "Breaking glocks", ChatColor.GOLD + "Breaking glocks in survival mode", ChatColor.GREEN + "Enabled"));
+			inv.setItem(12, createGuiItem(Material.IRON_AXE, ChatColor.WHITE + "Breaking blocks", ChatColor.GOLD + "Breaking blocks in survival mode", ChatColor.GREEN + "Enabled"));
 		}
 		else {
-			inv.setItem(12, createGuiItem(Material.IRON_AXE, ChatColor.WHITE + "Breaking glocks", ChatColor.GOLD + "Breaking glocks in survival mode", ChatColor.RED + "Disabled"));
+			inv.setItem(12, createGuiItem(Material.IRON_AXE, ChatColor.WHITE + "Breaking blocks", ChatColor.GOLD + "Breaking blocks in survival mode", ChatColor.RED + "Disabled"));
 		}
 		if(PlayersFlyInSurvival.contains(p.getName())) {
 			inv.setItem(10, createGuiItem(Material.ELYTRA, ChatColor.WHITE + "Flight", ChatColor.GOLD + "Flying in survival mode", ChatColor.GREEN + "Enabled"));
@@ -1507,7 +1507,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 		}
 		inv.setItem(10, createGuiItem(Material.ELYTRA, ChatColor.WHITE + "Flight", ChatColor.GOLD + "Flying in survival mode", ""));
 		inv.setItem(11, LimeStainedPlane);
-		inv.setItem(12, createGuiItem(Material.IRON_AXE, ChatColor.WHITE + "Breaking blocks", ChatColor.GOLD + "Breaking glocks in survival mode", ""));
+		inv.setItem(12, createGuiItem(Material.IRON_AXE, ChatColor.WHITE + "Breaking blocks", ChatColor.GOLD + "Breaking blocks in survival mode", ""));
 		inv.setItem(13, LimeStainedPlane);
 		inv.setItem(14, createGuiItem(Material.ENDER_EYE, ChatColor.WHITE + "Night vision", ChatColor.GOLD + "", ""));
 		inv.setItem(15, LimeStainedPlane);
@@ -1632,7 +1632,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 		inv.setItem(31, LimeStainedPlane);*/
 		inv.setItem(20, createGuiItem(Material.FEATHER, ChatColor.WHITE + "Feather Falling", ChatColor.GOLD + "Fall and don't touch the lines", ""));
 		inv.setItem(22, createGuiItem(Material.IRON_SWORD, ChatColor.WHITE + "Murder Mystery", ChatColor.GOLD + "Guess, who is the murderer...", ""));
-		inv.setItem(24, createGuiItem(Material.NETHERITE_HOE, ChatColor.WHITE + "Among Us", ChatColor.GOLD + "Find the imposter", ""));
+		inv.setItem(24, createGuiItem(Material.NETHERITE_HOE, ChatColor.WHITE + "Around Us", ChatColor.GOLD + "Find the imposter...", ""));
 		inv.setItem(36, createGuiItem(Material.CRIMSON_FUNGUS, ChatColor.WHITE + "Back to mode", ChatColor.GOLD + "Back to previous page", ""));
 		inv.setItem(44, createGuiItem(Material.CRIMSON_FUNGUS, ChatColor.WHITE + "Back to mode", ChatColor.GOLD + "Back to previous page", ""));
 		
