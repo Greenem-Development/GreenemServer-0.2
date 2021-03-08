@@ -143,7 +143,7 @@ import com.google.gson.GsonBuilder;
 import com.mojang.authlib.GameProfile;
 
 import me.greenem.server.classes.*;
-import me.greenem.server.dataBase.AuthDao;
+import me.greenem.server.dataBase.MainDao;
 import me.greenem.server.mainEvents.*;
 import me.greenem.server.otherStuff.*;
 
@@ -488,7 +488,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 			if(!AuthPlayers.contains(p)) {
 				try {
 //					AuthDao.getInstance().getPassword("GREEN3M");
-					AuthDao.getInstance().setPassword("GREEN3M", "1245112");
+					MainDao.getInstance().setPassword("GREEN3M", "1245112");
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.greenem.server.dataBase.AuthDao;
+import me.greenem.server.dataBase.MainDao;
 
 public class AuthEvents implements Listener {
 	//public Logger log = getLogger();
