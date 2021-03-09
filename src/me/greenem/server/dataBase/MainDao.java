@@ -95,12 +95,12 @@ public class MainDao extends AbstractDao {
 		}
 	}
 	
-	public boolean ifRowExists(@Nonnull String db, @Nonnull String keyName, @Nonnull String key) throws SQLException {
+	public boolean ifRowExists(@Nonnull String db, @Nonnull Object keyName, @Nonnull Object key) throws SQLException {
 		int result = 0;
 		Connection connection = getConnection();
 
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT EXISTS(SELECT 1 FROM " + db + " WHERE " + keyName + "=? LIMIT 1)");
-        preparedStatement.setString(1, key);
+        preparedStatement.setObject(1, key);
 
         ResultSet rs = preparedStatement.executeQuery();
         if(rs.next()) {
@@ -115,7 +115,7 @@ public class MainDao extends AbstractDao {
 		}
 	}
 
-	public boolean ifRowExists(@Nonnull String db, @Nonnull String... keysAndValues) throws SQLException {
+	public boolean ifRowExists(@Nonnull String db, @Nonnull Object... keysAndValues) throws SQLException {
 		int result = 0;
 		Connection connection = getConnection();
 
@@ -123,10 +123,10 @@ public class MainDao extends AbstractDao {
 		
 		for(int i = 0; i < keysAndValues.length; i++) {
 			if(i%2==0) {
-				condition +=keysAndValues[i] + "=\"";
+				condition +=keysAndValues[i] + "=?"; // =\"
 			}
 			else {
-				condition +=keysAndValues[i] + "\"";
+				//condition +=keysAndValues[i] + "\"";
 				if(i+1<keysAndValues.length) {
 					condition += " AND ";
 				}
@@ -134,8 +134,18 @@ public class MainDao extends AbstractDao {
 		}
 		
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT EXISTS(SELECT 1 FROM " + db + " WHERE " + condition + " LIMIT 1)");
+        
+        int prstmtNum = 1;
+        for(int i = 0; i < keysAndValues.length; i++) {
+        	if(i%2==1) {
+        		preparedStatement.setObject(prstmtNum, keysAndValues[i]);
+        		prstmtNum++;
+        	}
+        }
 
         //System.out.println(preparedStatement.toString());
+        
+        //if(1==1) return false;
         
         ResultSet rs = preparedStatement.executeQuery();
         if(rs.next()) {
@@ -150,13 +160,32 @@ public class MainDao extends AbstractDao {
 		}
 	}
 	
-	public boolean ifValueExists(@Nonnull String db, @Nonnull String keyName, @Nonnull String key, @Nonnull String valueName, @Nonnull String value) throws SQLException {
+	public boolean ifValueExists(@Nonnull String db, @Nonnull Object... keysAndValues) throws SQLException {
 		int result = 0;
 		Connection connection = getConnection();
 
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT EXISTS(SELECT 1 FROM " + db + " WHERE " + keyName + "=? AND " + valueName + "=? LIMIT 1)");
-        preparedStatement.setString(1, key);
-        preparedStatement.setString(2, value);
+		String condition = "";
+		
+		for(int i = 0; i < keysAndValues.length; i++) {
+			if(i%2==0) {
+				condition +=keysAndValues[i] + "=?"; // =\"
+			}
+			else {
+				if(i+1<keysAndValues.length) {
+					condition += " AND ";
+				}
+			}
+		}
+		
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT EXISTS(SELECT 1 FROM " + db + " WHERE " + condition + " LIMIT 1)");
+        
+        int prstmtNum = 1;
+        for(int i = 0; i < keysAndValues.length; i++) {
+        	if(i%2==1) {
+        		preparedStatement.setObject(prstmtNum, keysAndValues[i]);
+        		prstmtNum++;
+        	}
+        }
 
         ResultSet rs = preparedStatement.executeQuery();
         if(rs.next()) {
@@ -171,7 +200,7 @@ public class MainDao extends AbstractDao {
 		}
 	}
 	
-	public void setAnything(@Nonnull String db, @Nonnull String mainSName, @Nonnull String mainS, @Nonnull String valueSName, @Nonnull String valueS) throws SQLException {
+	public void __setAnything(@Nonnull String db, @Nonnull String mainSName, @Nonnull String mainS, @Nonnull String valueSName, @Nonnull String valueS) throws SQLException {
 		Connection connection = getConnection();
 		
 		boolean exists = ifRowExists(db, mainSName, mainS);
@@ -193,16 +222,16 @@ public class MainDao extends AbstractDao {
 		}
 	}
 
-	public void setAnything(@Nonnull String db, @Nonnull String mainSName, @Nonnull String mainS, @Nonnull String... keysAndValues) throws SQLException {
+	public void setAnything(@Nonnull String db, @Nonnull Object mainOName, @Nonnull Object mainO, @Nonnull Object... keysAndValues) throws SQLException {
 		if(keysAndValues.length%2==1) {
 			return;
 		}
 		Connection connection = getConnection();
 		
-		String[] mainSs = new String[2];
+		Object[] mainSs = new Object[2];
 		
-		mainSs[0] = mainSName;
-		mainSs[1] = mainS;
+		mainSs[0] = mainOName;
+		mainSs[1] = mainO;
 		
 //		for(int i = 0; i < keysAndValues.length; i++) {
 //			newKeysAndValues[i+2] = keysAndValues[i];
@@ -211,8 +240,8 @@ public class MainDao extends AbstractDao {
 //		newKeysAndValues[newKeysAndValues.length-2] = mainSName;
 //		newKeysAndValues[newKeysAndValues.length-1] = mainS;
 		
-		String vars = mainSName + ", ";
-		String values = "\"" + mainS + "\", ";
+		String vars = mainOName.toString() + ", ";
+		String values = "?, ";
 		String condition = "";
 		
 		for(int i = 0; i < keysAndValues.length; i++) {
@@ -221,19 +250,25 @@ public class MainDao extends AbstractDao {
 				if(2+(i+1)<keysAndValues.length) {
 					vars += ", ";
 				}
-				condition +=keysAndValues[i] + "=\"";
+				condition +=keysAndValues[i] + "=?";
 			}
 			else {
-				values += "\"" + keysAndValues[i] + "\"";
+				values += "?";
 				if(i+1<keysAndValues.length) {
 					values += ", ";
 				}
-				condition +=keysAndValues[i] + "\"";
+				//condition +=keysAndValues[i] + "\"";
 				if(i+1<keysAndValues.length) {
 					condition += ", ";
 				}
 			}
 		}
+		
+		//System.out.println(vars);
+		//System.out.println(values);
+		//System.out.println(condition);
+		
+		//if(1==1) return;
 		
 		boolean exists = ifRowExists(db, mainSs);
 		//System.out.println(exists);
@@ -241,15 +276,46 @@ public class MainDao extends AbstractDao {
 			PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + db + "(" + vars + ") VALUES(" + values + ")");
 			
 			//System.out.println(preparedStatement.toString());
+			//System.out.println(vars);
+			//System.out.println(values);
+//			for(int i = 0; i < keysAndValues.length; i++) {
+//				System.out.println(keysAndValues[i]);
+//			}
+			
+			preparedStatement.setObject(1, mainO);
+			int prstmtNum = 2;
+	        for(int i = 0; i < keysAndValues.length; i++) {
+	        	if(i%2==1) {
+	        		preparedStatement.setObject(prstmtNum, keysAndValues[i]);
+	        		prstmtNum++;
+	        	}
+	        }
+			
+			//System.out.println(preparedStatement.toString());
 			
 			preparedStatement.executeUpdate();
 			CloseConnections(null, preparedStatement, connection);
 		}
 		else {
-			PreparedStatement preparedStatement = connection.prepareStatement("UPDATE " + db + " SET " + condition + " WHERE " + mainSName + "=?");
-			preparedStatement.setString(1, mainS);
+			PreparedStatement preparedStatement = connection.prepareStatement("UPDATE " + db + " SET " + condition + " WHERE " + mainOName + "=?");
 			
-			System.out.println(preparedStatement.toString());
+			//System.out.println(preparedStatement.toString());
+			//System.out.println(vars);
+			//System.out.println(values);
+//			for(int i = 0; i < keysAndValues.length; i++) {
+//				System.out.println(keysAndValues[i]);
+//			}
+			
+			int prstmtNum = 1;
+	        for(int i = 0; i < keysAndValues.length; i++) {
+	        	if(i%2==1) {
+	        		preparedStatement.setObject(prstmtNum, keysAndValues[i]);
+	        		prstmtNum++;
+	        	}
+	        }
+	        preparedStatement.setObject(prstmtNum, mainO);
+			
+			//System.out.println(preparedStatement.toString());
 			
 			preparedStatement.executeUpdate();
 			CloseConnections(null, preparedStatement, connection);
@@ -374,10 +440,12 @@ public class MainDao extends AbstractDao {
 			
 			//MainDao.getInstance().setAnything("players_authentication", "name", "GREEN3M", "password", "yat", "lastLoginAdress", "1232.4233", "lastLoginPort", "1523");
 			//MainDao.getInstance().ifRowExists("players_authentication", "name", "GREEN3M", "password", "yat", "lastLoginAdress", "1232.4233", "lastLoginPort", "1523");
-			//MainDao.getInstance().setAnything("players_profiles", "name", "GREEN3M", "lastCustomLoginTime", "2020-01-01 10:10:10");
+			MainDao.getInstance().setAnything("players_profiles", "name", "GREEN3M2", "lastCustomLoginTime", "10102");
 			//String s = MainDao.getInstance().getAnything("players_profiles", "name", "GREEN3M", "lastCustomLoginTime");
 			//System.out.println(s);
-			System.out.println(MainDao.getInstance().getAnythingToHashMap("players_authentication", "name", "GREEN3M", "password", "lastLoginAdress")); 
+			//System.out.println(MainDao.getInstance().getAnythingToHashMap("players_authentication", "name", "GREEN3M", "password", "lastLoginAdress")); 
+			//System.out.println(MainDao.getInstance().ifRowExists("players_authentication", "name", "GREEN3M", "password", "no"));
+			//System.out.println(MainDao.getInstance().ifValueExists("players_authentication", "name", "GREEN3M", "password", "no", "lastLoginPort", ""));
 //			long date = 0;
 //			System.out.println(date);
 		} catch (SQLException e) {
@@ -388,29 +456,28 @@ public class MainDao extends AbstractDao {
 	public String parseToSQlStmtStringByType(String obj) {
 		return "\"" + (String) obj + "\"";
 	}
-	
+
 	public String parseToSQlStmtStringByType(Integer obj) {
 		return String.valueOf(obj.intValue());
 	}
-	
+
 	public String parseToSQlStmtStringByType(int obj) {
 		return String.valueOf(obj);
 	}
-	
+
 	public String parseToSQlStmtStringByType(Boolean obj) {
 		return String.valueOf(obj.booleanValue());
 	}
-	
+
 	public String parseToSQlStmtStringByType(boolean obj) {
 		return String.valueOf(obj);
 	}
-	
+
 	public String parseToSQlStmtStringByType(Long obj) {
 		return String.valueOf(obj.longValue());
 	}
-	
+
 	public String parseToSQlStmtStringByType(long obj) {
 		return String.valueOf(obj);
 	}
-	
 }
