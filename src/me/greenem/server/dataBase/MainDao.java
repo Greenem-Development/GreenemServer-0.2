@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 
@@ -271,7 +272,33 @@ public class MainDao extends AbstractDao {
 		return result;
 	}
 	
-	public ArrayList<Object> getAnything(@Nonnull String db, @Nonnull String mainSName, @Nonnull String mainS, @Nonnull String[] valueSName) throws SQLException {
+	public HashMap<Object, Object> getAnythingToHashMap(@Nonnull String db, @Nonnull String mainSName, @Nonnull String mainS, @Nonnull String... valueSName) throws SQLException {
+		HashMap<Object, Object> result = new HashMap<Object, Object>();
+		Connection connection = getConnection();
+
+		String values = "";
+		
+		for (int i=0; i<valueSName.length; i++) {
+			values+=valueSName[i];
+			if(i+1<valueSName.length) {
+				values+=", ";
+			}
+		}
+		
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT " + values + " FROM " + db + " WHERE " + mainSName + "=?");
+        preparedStatement.setString(1, mainS);
+
+        ResultSet rs = preparedStatement.executeQuery();
+        while(rs.next()) {
+        	for (int i=0; i<valueSName.length; i++) {
+        		result.put(valueSName[i], rs.getString(valueSName[i]));
+        	}
+        }
+        CloseConnections(rs, preparedStatement, connection);
+		return result;
+	}
+	
+	public ArrayList<Object> getAnything(@Nonnull String db, @Nonnull String mainSName, @Nonnull String mainS, @Nonnull String... valueSName) throws SQLException {
 		ArrayList<Object> result = new ArrayList<Object>();
 		Connection connection = getConnection();
 
@@ -329,31 +356,61 @@ public class MainDao extends AbstractDao {
 	
 	public static void main(String[] args) {
 		try {
-			//AuthDao.getInstance().setPassword("GREEN3M", "rfn");
-			//System.out.println(AuthDao.getInstance().getPassword("GREEN3M"));
-			//AuthDao.getInstance().deletePlayer("GREEN3M");
-			//AuthDao.getInstance().setAnything("players_authentication", "name", "GREEN3M", "lastLoginAdress", "12324233");
-			//System.out.println(AuthDao.getInstance().getAnything("players_authentication", "name", "GREEN3M", "lastLoginAdress"));
+			//MainDao.getInstance().setPassword("GREEN3M", "rfn");
+			//System.out.println(MainDao.getInstance().getPassword("GREEN3M"));
+			//MainDao.getInstance().deletePlayer("GREEN3M");
+			//MainDao.getInstance().setAnything("players_authentication", "name", "GREEN3M", "lastLoginAdress", "12324233");
+			//System.out.println(MainDao.getInstance().getAnything("players_authentication", "name", "GREEN3M", "lastLoginAdress"));
 			
 //			String[] s1= new String[2];
 //			s1[0] = "password";
 //			s1[1] = "lastLoginAdress";
-//			System.out.println(AuthDao.getInstance().getAnything("players_authentication", "name", "GREEN3M", s1));
+//			System.out.println(MainDao.getInstance().getAnything("players_authentication", "name", "GREEN3M", s1));
 
-			//AuthDao.getInstance().deleteAnything("players_authentication", "name", "GREEN3M", "password", "rfn");
-			//AuthDao.getInstance().deleteAnything("players_authentication", "name", "GREEN3M", "password", "ahahah");
-			//AuthDao.getInstance().deleteAnything("players_authentication", "name", "GREEN3M");
-			//AuthDao.getInstance().setAnything("players_authentication", "name", "GREEN3M", "password", "ya", "lastLoginAdress", "1232.4233", "lastLoginPort", "1523");
+			//MainDao.getInstance().deleteAnything("players_authentication", "name", "GREEN3M", "password", "rfn");
+			//MainDao.getInstance().deleteAnything("players_authentication", "name", "GREEN3M", "password", "ahahah");
+			//MainDao.getInstance().deleteAnything("players_authentication", "name", "GREEN3M");
+			//MainDao.getInstance().setAnything("players_authentication", "name", "GREEN3M", "password", "ya", "lastLoginAdress", "1232.4233", "lastLoginPort", "1523");
 			
-			//AuthDao.getInstance().setAnything("players_authentication", "name", "GREEN3M", "password", "yat", "lastLoginAdress", "1232.4233", "lastLoginPort", "1523");
-			//AuthDao.getInstance().ifRowExists("players_authentication", "name", "GREEN3M", "password", "yat", "lastLoginAdress", "1232.4233", "lastLoginPort", "1523");
-			//AuthDao.getInstance().setAnything("players_profiles", "name", "GREEN3M", "lastCustomLoginTime", "2020-01-01 10:10:10");
-			String s = MainDao.getInstance().getAnything("players_profiles", "name", "GREEN3M", "lastCustomLoginTime");
-			System.out.println(s);
-			long date = 0;
-			System.out.println(date);
+			//MainDao.getInstance().setAnything("players_authentication", "name", "GREEN3M", "password", "yat", "lastLoginAdress", "1232.4233", "lastLoginPort", "1523");
+			//MainDao.getInstance().ifRowExists("players_authentication", "name", "GREEN3M", "password", "yat", "lastLoginAdress", "1232.4233", "lastLoginPort", "1523");
+			//MainDao.getInstance().setAnything("players_profiles", "name", "GREEN3M", "lastCustomLoginTime", "2020-01-01 10:10:10");
+			//String s = MainDao.getInstance().getAnything("players_profiles", "name", "GREEN3M", "lastCustomLoginTime");
+			//System.out.println(s);
+			System.out.println(MainDao.getInstance().getAnythingToHashMap("players_authentication", "name", "GREEN3M", "password", "lastLoginAdress")); 
+//			long date = 0;
+//			System.out.println(date);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	public String parseToSQlStmtStringByType(String obj) {
+		return "\"" + (String) obj + "\"";
+	}
+	
+	public String parseToSQlStmtStringByType(Integer obj) {
+		return String.valueOf(obj.intValue());
+	}
+	
+	public String parseToSQlStmtStringByType(int obj) {
+		return String.valueOf(obj);
+	}
+	
+	public String parseToSQlStmtStringByType(Boolean obj) {
+		return String.valueOf(obj.booleanValue());
+	}
+	
+	public String parseToSQlStmtStringByType(boolean obj) {
+		return String.valueOf(obj);
+	}
+	
+	public String parseToSQlStmtStringByType(Long obj) {
+		return String.valueOf(obj.longValue());
+	}
+	
+	public String parseToSQlStmtStringByType(long obj) {
+		return String.valueOf(obj);
+	}
+	
 }
