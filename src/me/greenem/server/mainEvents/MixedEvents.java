@@ -204,7 +204,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 
 //import net.minecraft.server.v1_8_R3.PlayerSelector;
 
-public class ServerPlugin implements Listener {
+public class MixedEvents implements Listener {
 	public Plugin plugin = Bukkit.getPluginManager().getPlugin("GreenemServerMainPlugin");
 	public Logger log = plugin.getLogger();
 	final Random random = new Random(System.currentTimeMillis());
@@ -273,11 +273,11 @@ public class ServerPlugin implements Listener {
     
     //public static Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
 	
-	private static volatile ServerPlugin INSTANCE;
+	private static volatile MixedEvents INSTANCE;
 	
-	public static ServerPlugin getInstance() {
+	public static MixedEvents getInstance() {
 		if(INSTANCE == null) {
-			INSTANCE = new ServerPlugin();
+			INSTANCE = new MixedEvents();
 		}
 		return INSTANCE;
 	}
@@ -651,7 +651,7 @@ public class ServerPlugin implements Listener {
 	
 	public void PlayerInteractEvent(PlayerInteractEvent evt){
 		Player p = evt.getPlayer();
-        Block b = evt.getClickedBlock();
+        //Block b = evt.getClickedBlock();
         if(p.getGameMode() == GameMode.SURVIVAL) {
         	if(evt.getClickedBlock() != null) {
         		if(evt.getAction().equals(Action.RIGHT_CLICK_AIR) || evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
