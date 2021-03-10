@@ -200,28 +200,6 @@ public class MainDao extends AbstractDao {
 		}
 	}
 	
-	public void __setAnything(@Nonnull String db, @Nonnull String mainSName, @Nonnull String mainS, @Nonnull String valueSName, @Nonnull String valueS) throws SQLException {
-		Connection connection = getConnection();
-		
-		boolean exists = ifRowExists(db, mainSName, mainS);
-		if(exists == false) {
-			PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + db + "(" + mainSName + ", " + valueSName + ") VALUES(?, ?)");
-			preparedStatement.setString(1, mainS);
-			preparedStatement.setString(2, valueS);
-			
-			preparedStatement.executeUpdate();
-			CloseConnections(null, preparedStatement, connection);
-		}
-		else {
-			PreparedStatement preparedStatement = connection.prepareStatement("UPDATE " + db + " SET " + valueSName +"=? WHERE " + mainSName + "=?");
-			preparedStatement.setString(1, valueS);
-			preparedStatement.setString(2, mainS);
-			
-			preparedStatement.executeUpdate();
-			CloseConnections(null, preparedStatement, connection);
-		}
-	}
-
 	public void setAnything(@Nonnull String db, @Nonnull Object mainOName, @Nonnull Object mainO, @Nonnull Object... keysAndValues) throws SQLException {
 		if(keysAndValues.length%2==1) {
 			return;
@@ -229,16 +207,8 @@ public class MainDao extends AbstractDao {
 		Connection connection = getConnection();
 		
 		Object[] mainSs = new Object[2];
-		
 		mainSs[0] = mainOName;
 		mainSs[1] = mainO;
-		
-//		for(int i = 0; i < keysAndValues.length; i++) {
-//			newKeysAndValues[i+2] = keysAndValues[i];
-//		}
-		
-//		newKeysAndValues[newKeysAndValues.length-2] = mainSName;
-//		newKeysAndValues[newKeysAndValues.length-1] = mainS;
 		
 		String vars = mainOName.toString() + ", ";
 		String values = "?, ";
@@ -257,30 +227,15 @@ public class MainDao extends AbstractDao {
 				if(i+1<keysAndValues.length) {
 					values += ", ";
 				}
-				//condition +=keysAndValues[i] + "\"";
 				if(i+1<keysAndValues.length) {
 					condition += ", ";
 				}
 			}
 		}
 		
-		//System.out.println(vars);
-		//System.out.println(values);
-		//System.out.println(condition);
-		
-		//if(1==1) return;
-		
 		boolean exists = ifRowExists(db, mainSs);
-		//System.out.println(exists);
 		if(exists == false) {
 			PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + db + "(" + vars + ") VALUES(" + values + ")");
-			
-			//System.out.println(preparedStatement.toString());
-			//System.out.println(vars);
-			//System.out.println(values);
-//			for(int i = 0; i < keysAndValues.length; i++) {
-//				System.out.println(keysAndValues[i]);
-//			}
 			
 			preparedStatement.setObject(1, mainO);
 			int prstmtNum = 2;
@@ -290,21 +245,12 @@ public class MainDao extends AbstractDao {
 	        		prstmtNum++;
 	        	}
 	        }
-			
-			//System.out.println(preparedStatement.toString());
-			
+	        
 			preparedStatement.executeUpdate();
 			CloseConnections(null, preparedStatement, connection);
 		}
 		else {
 			PreparedStatement preparedStatement = connection.prepareStatement("UPDATE " + db + " SET " + condition + " WHERE " + mainOName + "=?");
-			
-			//System.out.println(preparedStatement.toString());
-			//System.out.println(vars);
-			//System.out.println(values);
-//			for(int i = 0; i < keysAndValues.length; i++) {
-//				System.out.println(keysAndValues[i]);
-//			}
 			
 			int prstmtNum = 1;
 	        for(int i = 0; i < keysAndValues.length; i++) {
@@ -314,8 +260,6 @@ public class MainDao extends AbstractDao {
 	        	}
 	        }
 	        preparedStatement.setObject(prstmtNum, mainO);
-			
-			//System.out.println(preparedStatement.toString());
 			
 			preparedStatement.executeUpdate();
 			CloseConnections(null, preparedStatement, connection);

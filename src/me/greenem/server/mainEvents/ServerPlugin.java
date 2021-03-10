@@ -207,6 +207,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 public class ServerPlugin extends JavaPlugin implements Listener {
 	public Logger log = getLogger();
 	final Random random = new Random(System.currentTimeMillis());
+	public Plugin thisPlugin = this;
 	
 	public Inventory AdminSettingsInventoryInv = Bukkit.createInventory(null, 45, "Admin Settings");
 	public Inventory AdminSettingsInventoryChangeGamemodeInv = Bukkit.createInventory(null, 27, "Change Gamemode");
@@ -299,6 +300,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 		
 	    
 		getServer().getPluginManager().registerEvents(this, this);
+		getServer().getPluginManager().registerEvents(AuthEvents.getInstance(), this);
 		
 		InitializeAll();
 		

@@ -1,8 +1,10 @@
 package me.greenem.server.mainEvents;
 
+import java.util.logging.Logger;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -12,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.greenem.server.dataBase.MainDao;
 
 public class AuthEvents implements Listener {
-	//public Logger log = getLogger();
+	public Logger log = ServerPlugin.getInstance().log;
 	//final Random random = new Random(System.currentTimeMillis());
 	
 	private static volatile AuthEvents INSTANCE;
@@ -25,10 +27,9 @@ public class AuthEvents implements Listener {
 	}
 	
 	public void MoveEventNew1(PlayerMoveEvent e) {
-		System.out.println(e.getPlayer().getName());
+		//System.out.println(e.getPlayer().getName());
 		//ServerPlugin.getInstance().log.info("yes, another event listener file almost (2x) works!");
-		
-		//log.info("yes, another event listener file almost works!");
+		log.info("another event listener file works!");
 	}
 	
 }
