@@ -204,10 +204,11 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 
 //import net.minecraft.server.v1_8_R3.PlayerSelector;
 
-public class ServerPlugin extends JavaPlugin implements Listener {
-	public Logger log = getLogger();
+public class ServerPlugin implements Listener {
+	public Plugin plugin = Bukkit.getPluginManager().getPlugin("GreenemServerMainPlugin");
+	public Logger log = plugin.getLogger();
 	final Random random = new Random(System.currentTimeMillis());
-	public Plugin thisPlugin = this;
+	//public Plugin thisPlugin = this;
 	
 	public Inventory AdminSettingsInventoryInv = Bukkit.createInventory(null, 45, "Admin Settings");
 	public Inventory AdminSettingsInventoryChangeGamemodeInv = Bukkit.createInventory(null, 27, "Change Gamemode");
@@ -281,12 +282,14 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 		return INSTANCE;
 	}
 	
-	@Override
+	private Server getServer() {
+		return plugin.getServer();
+	}
+	
 	public void onDisable() {
 		log.info("Greenem's server plugin has been disabled.");
 	}
 
-	@Override
 	public void onEnable() {
 		log.info("Greenem's server plugin has been enabled!");
 		
@@ -299,13 +302,12 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 		//new HashMap<>()<"murdermystery", new HashMap<>()<"map1", new Location(
 		
 	    
-		getServer().getPluginManager().registerEvents(this, this);
-		getServer().getPluginManager().registerEvents(AuthEvents.getInstance(), this);
+		
 		
 		InitializeAll();
 		
-		BukkitScheduler scheduler = getServer().getScheduler();
-        scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
+		BukkitScheduler scheduler = plugin.getServer().getScheduler();
+        scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
             	//log.info("runabble");
@@ -2814,7 +2816,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
             						}
             					}
             					else if(arena.MurderersList.contains(Victim)) {
-            						getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            						getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             							@Override
             							public void run() {
             								log.info(ChatColor.GOLD + "" + (Victim.getHealth()-Victim.getMaxHealth()/2));
@@ -2947,7 +2949,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 			Rotation rotaion = frame.getRotation();
 			if(IfStringStartsWithArrayListEllement(e.getEntity().getWorld().getName(), MapListWithBreakingProtection)) {
 				frame.remove();
-				getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+				getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 					@Override
 					public void run() {
 						ItemFrame newFrame = loc.getWorld().spawn(loc, ItemFrame.class);
@@ -3021,7 +3023,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 						Victim.sendTitle(ChatColor.ITALIC + "" + ChatColor.BOLD + "" + ChatColor.DARK_RED + "YOU DIED", ChatColor.ITALIC + "" + ChatColor.GRAY + "You were killed by a player.", 5, 40, 30);
 					}
 					if(arena.MurderersList.contains(Victim)) {
-						getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+						getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 							@Override
 							public void run() {
 								log.info(ChatColor.GOLD + "" + (Victim.getHealth()-Victim.getMaxHealth()/2));
@@ -3107,7 +3109,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 			arena.DeadList.add(HittenPlayer);
 		}
 		//HittenPlayer.setHealthScale(20);
-		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+		getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
 				HittenPlayer.setHealth(20.0);
@@ -3166,7 +3168,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
         			//stand.getLocation().setPitch(2);
         			//stand.getLocation().setYaw(2);
         		}
-        	}.runTaskTimer(this, 0, 2);
+        	}.runTaskTimer(plugin, 0, 2);
         }
 	
 	public void VanishOn(Player p) {
@@ -3914,7 +3916,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
         				p.setFlying(true);
         			}
     			
-        			getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+        			getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
         				@Override
         				public void run() {
         					FrozenPlayers.remove(p.getName());
@@ -3924,7 +3926,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
         					//}
     					}
         			}, 2);
-        			getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+        			getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
         				@Override
         				public void run() {
         					if(!FrozenPlayers.contains(p.getName())) {
@@ -4465,7 +4467,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
     		public void run() {
     			p.setGameMode(GameMode.SURVIVAL);
     		}
-    	}.runTaskLater(this, 1);
+    	}.runTaskLater(plugin, 1);
 	}
 	
 	@EventHandler
@@ -4570,7 +4572,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
                     p.setVelocity(new Vector(0, 0.2, 0));
                     p.teleport(loc2);
         		}
-        	}.runTaskLater(this, 1);
+        	}.runTaskLater(plugin, 1);
         }
     }
     
@@ -4649,7 +4651,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
 								b2.setType(Material.AIR);
 							}
 						}
-					}.runTaskLater(this, 1*i);
+					}.runTaskLater(plugin, 1*i);
 				}
 			}
 		}
@@ -5034,7 +5036,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
     				}
     			}
     		}
-    	}.runTaskTimer(this, 0, 20);
+    	}.runTaskTimer(plugin, 0, 20);
     }
     
     public void TpToAuth (Player p) {
@@ -5110,7 +5112,7 @@ public class ServerPlugin extends JavaPlugin implements Listener {
     	packet.a = camera.getEntityId();
     	PlayerConnection connection1 = ((CraftPlayer) p).getHandle().playerConnection;
     	connection1.sendPacket(packet);
-    	getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+    	getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
     		@Override
 			public void run() {
     			packet.a = before.getEntityId();

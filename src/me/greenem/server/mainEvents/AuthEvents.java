@@ -4,7 +4,8 @@ import java.util.logging.Logger;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import org.apache.logging.log4j.core.config.plugins.Plugin;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,7 +15,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.greenem.server.dataBase.MainDao;
 
 public class AuthEvents implements Listener {
-	public Logger log = ServerPlugin.getInstance().log;
+	public Plugin plugin = Bukkit.getPluginManager().getPlugin("GreenemServerMainPlugin");
+	public Logger log = plugin.getLogger();
 	//final Random random = new Random(System.currentTimeMillis());
 	
 	private static volatile AuthEvents INSTANCE;

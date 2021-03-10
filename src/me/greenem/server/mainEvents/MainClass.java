@@ -202,6 +202,41 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 
-public class MainClass {
-
+public class MainClass extends JavaPlugin {
+	public Logger log = getLogger();
+//	private static volatile MainClass INSTANCE;
+	BukkitScheduler scheduler = getServer().getScheduler();
+	public Plugin plugin = this;
+	
+//	public static MainClass getInstance() {
+//		if(INSTANCE == null) {
+//			INSTANCE = this;
+//		}
+//		return INSTANCE;
+//	}
+//	
+//	public Plugin getPlugin() {
+//		return plugin;
+//	}
+	
+	@Override
+	public void onDisable() {
+		ServerPlugin.getInstance().onDisable();
+	}
+	
+	@Override
+	public void onEnable() {
+//		INSTANCE = this;
+		RegisterAllEvents();
+		ServerPlugin.getInstance().onEnable();
+	}
+	
+	public void RegisterAllEvents() {
+		getServer().getPluginManager().registerEvents(ServerPlugin.getInstance(), this);
+		getServer().getPluginManager().registerEvents(AuthEvents.getInstance(), this);
+	}
+	
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
+		return ServerPlugin.getInstance().onCommand(sender, cmd, commandLabel, args);
+	}
 }
