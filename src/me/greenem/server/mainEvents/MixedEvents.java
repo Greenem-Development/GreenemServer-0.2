@@ -336,167 +336,90 @@ public class MixedEvents implements Listener {
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		Player p = getServer().getPlayer(sender.getName());
 		if(cmd.getName().equalsIgnoreCase("register") || (cmd.getName().equalsIgnoreCase("r") && p.getWorld().getName().equalsIgnoreCase("auth"))){
-			if(AuthPlayers.contains(p)) {
-				RegisterPlayer(p, args);
-			}
-			else p.sendMessage(ChatColor.RED + "You have already signed in");
+			AuthEvents.getInstance().RegisterPlayer(p, args);
 		}
 		else if(cmd.getName().equalsIgnoreCase("login") || cmd.getName().equalsIgnoreCase("l")){
-			if(AuthPlayers.contains(p)) {
-				LoginPlayer(p, args);
-			}
-			else p.sendMessage(ChatColor.RED + "You have already signed in");
+			AuthEvents.getInstance().LoginPlayer(p, args);
 		}
 		if((cmd.getName().equalsIgnoreCase("hub")) || (cmd.getName().equalsIgnoreCase("spawn"))){
-			if(!AuthPlayers.contains(p)) {
 				tpToSpawn(getServer().getPlayer(sender.getName()));
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("mode")){
-			if(!AuthPlayers.contains(p)) {
 				ModeCommand(p, args);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("setcount")){
-			if(!AuthPlayers.contains(p)) {
 				SetCountCommand(p, args);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("setteam")){ // setplayer <team> <player> <remove>
-			if(!AuthPlayers.contains(p)) {
 				SetTeamCommand(sender);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("test")){
-			if(!AuthPlayers.contains(p)) {
 				TestCommand(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("test2")){
-			if(!AuthPlayers.contains(p)) {
 				Test2Command(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("gm")){
-			if(!AuthPlayers.contains(p)) {
 				GmCommand(sender, args);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("heal")){
-			if(!AuthPlayers.contains(p)) {
 				HealCommand(getServer().getPlayer(sender.getName()), args);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("feather")){
-			if(!AuthPlayers.contains(p)) {
 				FeatherCommand(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("v")){
-			if(!AuthPlayers.contains(p)) {
 				VanishCommand(p, args);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("chesttocode")){
-			if(!AuthPlayers.contains(p)) {
 				ChestToCodeCommand(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("createnps")){
-			if(!AuthPlayers.contains(p)) {
 				//p.sendMessage("Command is disabled");
 				CreateNPC(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("destroynpc")){
-			if(!AuthPlayers.contains(p)) {
 				//p.sendMessage("Command is disabled");
 				DeleteAllNPC(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("fly")){
-			if(!AuthPlayers.contains(p)) {
 				ChangeAllowFly(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("stringstocode")){
-			if(!AuthPlayers.contains(p)) {
 				StringsToCode(p, args);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("revive")){
-			if(!AuthPlayers.contains(p)) {
 				ReviveCommand(p, args);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("scaffolding")){
-			if(!AuthPlayers.contains(p)) {
 				SpawnScaffolding(p, p.getLocation());
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("door")){
-			if(!AuthPlayers.contains(p)) {
 				CloseOropenDoor(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("auth")){
-			if(!AuthPlayers.contains(p)) {
 				TpToAuth(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("backupworld")){
-			if(!AuthPlayers.contains(p)) {
 				BackupWorld(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("save-world")){
-			if(!AuthPlayers.contains(p)) {
 				SaveWorld(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("newspawn")){
-			if(!AuthPlayers.contains(p)) {
 				tpToNewSpawn(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if(cmd.getName().equalsIgnoreCase("packetstests")){
-			if(!AuthPlayers.contains(p)) {
 				//p.sendMessage("Command is disabled");
 				PacketsTests(p);
-			}
-			else p.sendMessage(ChatColor.RED + "Please, sign in to use this command.");
 		}
 		else if (cmd.getName().equalsIgnoreCase("sqltest")) {
-			if(!AuthPlayers.contains(p)) {
 				try {
 //					AuthDao.getInstance().getPassword("GREEN3M");
 					MainDao.getInstance().setPassword("GREEN3M", "1245112");
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			}
 		}
 		
 		return false;
@@ -612,7 +535,7 @@ public class MixedEvents implements Listener {
 			p.getInventory().remove(Material.EMERALD);
 		}
 		String[] str = {};
-		HealCommand(p, str);
+		HealCommand(p, str, true);
 		MurderMysteryItemsClear(p);
 		MinigameVanishOff(p);
 //		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
@@ -764,109 +687,7 @@ public class MixedEvents implements Listener {
 		}
 	}
 	
-	@EventHandler
-	public void PlayerPortalEvent(PlayerPortalEvent evt) {
-		
-	}
 	
-	@EventHandler(priority=EventPriority.LOW)
-	public void PlayerLoginEvent(PlayerJoinEvent e) throws IOException {
-		Player p = e.getPlayer();
-		e.setJoinMessage("");
-		p.setOp(false);
-		FileReader reader = null;
-		props.clear();
-		File f = new File(authDirectory, p.getName() + ".properties");
-		if (f.exists()) {
-			try {
-				reader = new FileReader(f);
-				try {
-					props.load(reader);
-					reader.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			}
-		}
-		if(AdminPlayersVanished.contains(p.getName())) {
-			AdminPlayersVanished.remove(p.getName());
-		}
-		if(MinigamePlayersVanished.contains(p.getName())) {
-			MinigamePlayersVanished.remove(p.getName());
-		}
-		if(f.exists() && props.getProperty("password")!=null) {
-			String s = p.getAddress().toString().split("/")[1].split(":")[0];
-			//log.info(s);
-			if(s.endsWith("\\")) s.substring(0, s.length()-1);
-			//log.info(s);
-			//log.info("same adress: "+props.getProperty("lastLoginAdress").equals(s));
-			if(props.getProperty("lastLoginAdress").equals(s)) {
-				//log.info(Integer.parseInt(props.getProperty(p.getName()+".lastLoginPort"))+"");
-				//log.info("same port: " + (Math.abs(Integer.parseInt(props.getProperty("lastLoginPort"))-p.getAddress().getPort()) < 40000)+"");
-				if(Math.abs(Integer.parseInt(props.getProperty("lastLoginPort"))-p.getAddress().getPort()) < 20000) {
-					//log.info(Calendar.getInstance().getTimeInMillis()+"");
-					//log.info(""+Long.parseLong(props.getProperty(p.getName()+".lastLoginTime")));
-					//log.info(""+(Calendar.getInstance().getTimeInMillis() - Long.parseLong(props.getProperty(p.getName()+".lastLoginTime")) < 86400000));
-					//log.info("time from last logging in: " + Long.toString(Math.abs(Long.parseLong(props.getProperty("lastRealLoginTime"))-Calendar.getInstance().getTimeInMillis())));
-					if(Math.abs(Long.parseLong(props.getProperty("lastRealLoginTime"))-Calendar.getInstance().getTimeInMillis()) < 46400000) {
-						p.sendTitle("", "");
-						p.sendMessage(ChatColor.GREEN + "You have already logged in before.");
-						GiveOpIfNeeds(p);
-						tpToSpawn(p);
-						PrepareJoinedPlayer(p);
-						MakePlayerProfileUpToDate(p);
-						MakePlayerAuthUpToDate(p);
-						return;
-					}
-				}
-			}
-		}
-		p.getInventory().clear();
-		p.getInventory().setHeldItemSlot(0);
-		AuthPlayers.add(p);
-		//evt.getPlayer().setCollidable(false);
-		//evt.getPlayer().spigot().setCollidesWithEntities(false);
-		for (Player p1 : getServer().getOnlinePlayers()) {
-			p1.hidePlayer(p);
-	        p.hidePlayer(p1);
-		}
-		RemoveMaterial(p, Material.NETHER_STAR);
-		RemoveMaterial(p, Material.BLAZE_POWDER);
-		RemoveMaterial(p, Material.CRYING_OBSIDIAN);
-		Location loc = new Location(Bukkit.getWorld("auth"), 0.5, 37.5, 0.5);
-		loc.setYaw(135);
-		p.teleport(loc);
-		p.getWorld().setSpawnLocation(loc);
-		p.getWorld().setTime(1000);
-		//if(props.getProperty(e.getPlayer().getName()+".lastLoginAdress")!=null) {//если он зареган
-		if(props.getProperty("password")==null) {
-			p.sendTitle(ChatColor.ITALIC + "" + ChatColor.BOLD + "" + ChatColor.GOLD + "You should register", ChatColor.ITALIC + "" + ChatColor.GRAY + "/register <password> <password>", 5, 99999, 30);
-		}
-		else {
-			p.sendTitle(ChatColor.ITALIC + "" + ChatColor.BOLD + "" + ChatColor.GOLD + "You should login", ChatColor.ITALIC + "" + ChatColor.GRAY + "/login <password>", 5, 99999, 30);
-		}
-		p.setGameMode(GameMode.ADVENTURE);
-		AuthStartCountdown(p, 30);
-		//}
-//		for (Player p1 : getServer().getOnlinePlayers()) {
-//            p1.showPlayer(p);
-//        }
-//		p.setCanPickupItems(true);
-//		//p.setCollidable(false);
-//		//p.spigot().setCollidesWithEntities(false);
-//		tpToSpawn(p);
-//		for (Player player : p.getWorld().getPlayers()) {
-//			player.sendMessage(ChatColor.WHITE + e.getPlayer().getName() + " joined the server!");
-//		}
-//		evt.getPlayer().setGameMode(GameMode.SURVIVAL);
-//		//evt.getPlayer().getInventory().clear();
-//		evt.getPlayer().teleport(new Location(Bukkit.getWorld("Spawn"), 0.5, 101, 0.5));
-//		evt.getPlayer().setLevel(0);
-//		evt.getPlayer().setExp(0);
-//		//Bukkit.broadcastMessage(ChatColor.WHITE + evt.getPlayer().getName() + " joined the server!");
-	}
 	
 //	@EventHandler
 //	public void PlayerChatEvent(AsyncPlayerChatEvent e) {
@@ -1689,8 +1510,8 @@ public class MixedEvents implements Listener {
 		}
 	}
 	
-	public void HealCommand(Player p, String[] args) {
-		if(p.isOp() || TrialStaffPlayers.contains(p.getName())) {
+	public void HealCommand(Player p, String[] args, boolean requestedByCode) {
+		if(p.isOp() || TrialStaffPlayers.contains(p.getName()) || requestedByCode) {
 			if(args.length == 0){
 				p.setHealth(20);
 				p.setFoodLevel(20);
@@ -1711,6 +1532,10 @@ public class MixedEvents implements Listener {
 		else {
 			p.sendMessage(ChatColor.RED + "you cannot use this command.");
 		}
+	}
+	
+	public void HealCommand(Player p, String[] args) {
+		HealCommand(p, args, false);
 	}
 	
 	public void GmCommand(CommandSender sender, String[] args) {
@@ -4322,125 +4147,6 @@ public class MixedEvents implements Listener {
 		
 	}
 	
-	public void RegisterPlayer(Player p, String[] args)  {
-		if (args.length < 2) {
-			p.sendMessage(ChatColor.RED + "Incorrect command using, Try " + ChatColor.GOLD + "/register <password> <password>" + ChatColor.RED + ".");
-		} else if (args[0].equals(args[1])) {
-			FileOutputStream fos = null;
-			props.clear();
-			FileReader reader = null;
-			try {
-				File f = new File(authDirectory, p.getName() + ".properties");
-				if (f.exists()) {
-					try {
-						reader = new FileReader(f);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-					props.load(reader);
-					reader.close();
-				}
-				if (props.getProperty("password") == null) {
-					props.setProperty("password", args[0]);
-					props.setProperty("lastRealLoginTime", Long.toString(Calendar.getInstance().getTimeInMillis()));
-					String s = p.getAddress().toString().split("/")[1].split(":")[0];
-					log.info(s);
-					if (s.endsWith("\\")) s.substring(0, s.length() - 1);
-					props.setProperty("lastLoginAdress", s);
-					props.setProperty("lastLoginPort", Integer.toString(p.getAddress().getPort()));
-					try {
-						FileOutputStream out = new FileOutputStream(f);
-						try {
-							fos = new FileOutputStream(f);
-							props.store(fos, "");
-							fos.close();
-							p.sendTitle(ChatColor.ITALIC + "" + ChatColor.BOLD + "" + ChatColor.GREEN + "Now you registered!", ChatColor.ITALIC + "" + ChatColor.DARK_GREEN + "Welcome! Don't forget the password ;)", 5, 40, 30);
-							if (AuthPlayers.contains(p)) AuthPlayers.remove(p);
-							GiveOpIfNeeds(p);
-							PrepareJoinedPlayer(p);
-							MakePlayerProfileUpToDate(p);
-							MakePlayerAuthUpToDate(p);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-				} else {
-					p.sendMessage(ChatColor.RED + "This account is already registered. You should use " + ChatColor.GOLD
-							+ "/login <password>" + ChatColor.RED + ".");
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			p.sendMessage(ChatColor.RED + "The password which is first doesn't match the second one.");
-		}
-	}
-	
-	public void LoginPlayer(Player p, String[] args) {
-		if(args.length<1) {
-			p.sendMessage(ChatColor.RED + "Incorrect command using, Try " + ChatColor.GOLD + "/login <password>"+ChatColor.RED+".");
-			return;
-		}
-		FileOutputStream fos = null;
-    	props.clear();
-    	FileReader reader = null;
-		try {
-			File f = new File(authDirectory, p.getName()+".properties");
-			if (f.exists()) {
-				try {
-					reader = new FileReader(f);
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-				props.load(reader);
-				reader.close();
-			}
-			if(props.getProperty("password")!=null) {
-				if(props.getProperty("password").equals(args[0])) {
-					//and here
-					props.setProperty("lastRealLoginTime", Long.toString(Calendar.getInstance().getTimeInMillis()));
-					String s = p.getAddress().toString().split("/")[1].split(":")[0];
-					if(s.endsWith("\\")) s.substring(0, s.length()-1);
-					props.setProperty("lastLoginAdress", s);
-					props.setProperty("lastLoginPort", Integer.toString(p.getAddress().getPort()));
-					try {
-						fos = new FileOutputStream(f);
-						props.store(fos, "");
-						fos.close();
-						p.sendTitle(ChatColor.ITALIC + "" + ChatColor.BOLD + "" + ChatColor.GREEN + "You logged in!", ChatColor.ITALIC + "" + ChatColor.GRAY + "Welcome back!", 5, 40, 30);
-						if(AuthPlayers.contains(p)) AuthPlayers.remove(p);
-						GiveOpIfNeeds(p);
-						PrepareJoinedPlayer(p);
-						MakePlayerProfileUpToDate(p);
-						MakePlayerAuthUpToDate(p);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-				}
-				else {
-					p.sendMessage(ChatColor.RED + "Incorrect password.");
-					log.info(AuthAttempts.get(p)+"");
-					if(AuthAttempts.get(p)!=null && AuthAttempts.get(p).intValue()+1>=5) {
-						p.kickPlayer("To many attempts!");
-					}
-					if(AuthAttempts.containsKey(p)) {
-						AuthAttempts.put(p, AuthAttempts.get(p).intValue()+1);
-					}
-					else {
-						AuthAttempts.put(p, 1);
-					}
-				}
-			}
-			else {
-				p.sendMessage(ChatColor.RED + "This account is NOT registered. You should use " + ChatColor.GOLD + "/register <password> <password>"+ChatColor.RED+".");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void PrepareJoinedPlayer(Player p) {
 		for (Player p1 : getServer().getOnlinePlayers()) {
           p1.showPlayer(p);
@@ -4468,43 +4174,6 @@ public class MixedEvents implements Listener {
     			p.setGameMode(GameMode.SURVIVAL);
     		}
     	}.runTaskLater(plugin, 1);
-	}
-	
-	@EventHandler
-	public void PlayerPreJoinE (AsyncPlayerPreLoginEvent e) {
-		FileReader reader = null;
-		props.clear();
-		File f = new File(authDirectory, e.getName() + ".properties");
-		if (f.exists()) {
-			try {
-				reader = new FileReader(f);
-				try {
-					props.load(reader);
-					reader.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			}
-		}
-		if(getServer().getPlayer(e.getName()) != null) { //если такой игрок уже онлайн
-			if(props.getProperty("lastLoginAdress")!=null) {//если он зареган
-				String s = e.getAddress().toString().split("/")[1].split(":")[0];
-				if(s.endsWith("\\")) s.substring(0, s.length()-1);
-				log.info(ChatColor.AQUA + "s = " + s + " (AsyncPlayerPreLoginEvent)");
-				log.info(ChatColor.AQUA + "lastLoginAdress = " + props.getProperty("lastLoginAdress") + " (AsyncPlayerPreLoginEvent)");
-				log.info(ChatColor.AQUA + "" + props.getProperty("lastLoginAdress").equals(s));
-				if(!props.getProperty("lastLoginAdress").equals(s)) {
-					//если уже играющий игрок под IP, который последний раз правильно ввёл пароль
-					e.disallow(Result.KICK_OTHER, ChatColor.RED + "This player is already on the server");
-				}
-			}
-			else {
-				//он не загреган, но всё равно выкидывать уже играющего (в лобби регистрации) нельзя
-				e.disallow(Result.KICK_OTHER, ChatColor.RED + "This player is already on the server");
-			}
-		}
 	}
 	
     public void saveInventory (Player p) throws IOException {
@@ -5012,31 +4681,6 @@ public class MixedEvents implements Listener {
     
     public void InitializeTrialStaffPlayers () {
     	TrialStaffPlayers.add("TheSheerDarkness");
-    }
-    
-    public void AuthStartCountdown(Player p, int MaxSeconds) {
-    	Long timeJoined = Calendar.getInstance().getTimeInMillis();
-    	new BukkitRunnable() {
-    		@Override
-    		public void run() {
-    			if(p==null || !p.isOnline() || (!AuthPlayers.contains(p))) {
-    				cancel();
-    			}
-    			else {
-    				if(MaxSeconds - ((Calendar.getInstance().getTimeInMillis()-timeJoined)/1000) > 0){
-    					float persent;
-    					//log.info((Calendar.getInstance().getTimeInMillis()-timeJoined)/1000 + "");
-						persent = (float) (MaxSeconds - (Calendar.getInstance().getTimeInMillis()-timeJoined)/1000) / MaxSeconds; 
-						if(persent > 1 || persent < 0) persent = (float) 0.999;
-						p.setLevel(Integer.parseInt(Long.toString(MaxSeconds - ((Calendar.getInstance().getTimeInMillis())-timeJoined)/1000)));
-						p.setExp(persent);
-    				}
-    				else {
-    					p.kickPlayer("You were not in time while entering password");
-    				}
-    			}
-    		}
-    	}.runTaskTimer(plugin, 0, 20);
     }
     
     public void TpToAuth (Player p) {

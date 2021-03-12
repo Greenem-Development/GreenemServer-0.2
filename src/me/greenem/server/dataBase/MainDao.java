@@ -380,7 +380,7 @@ public class MainDao extends AbstractDao {
 			
 			//MainDao.getInstance().setAnything("players_authentication", "name", "GREEN3M", "password", "yat", "lastLoginAdress", "1232.4233", "lastLoginPort", "1523");
 			//MainDao.getInstance().ifRowExists("players_authentication", "name", "GREEN3M", "password", "yat", "lastLoginAdress", "1232.4233", "lastLoginPort", "1523");
-			MainDao.getInstance().setAnything("players_profiles", "name", "GREEN3M2", "lastCustomLoginTime", "10102");
+			//MainDao.getInstance().setAnything("players_profiles", "name", "GREEN3M2", "lastCustomLoginTime", "10102");
 			//String s = MainDao.getInstance().getAnything("players_profiles", "name", "GREEN3M", "lastCustomLoginTime");
 			//System.out.println(s);
 			//System.out.println(MainDao.getInstance().getAnythingToHashMap("players_authentication", "name", "GREEN3M", "password", "lastLoginAdress")); 
@@ -388,6 +388,9 @@ public class MainDao extends AbstractDao {
 			//System.out.println(MainDao.getInstance().ifValueExists("players_authentication", "name", "GREEN3M", "password", "no", "lastLoginPort", ""));
 //			long date = 0;
 //			System.out.println(date);
+			//System.out.println(MainDao.getInstance().getAnything("players_authentication", "name", "GREEN3M2", "lastLoginAdress") == null);
+			//System.out.println(MainDao.getInstance().getAnything("players_authentication", "name", "GREEN3M", "password", "lastLoginPort").get(1));
+			System.out.println(MainDao.getInstance().getAnything("players_authentication", "name", "GREEN3M", "password").equals("nO"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
