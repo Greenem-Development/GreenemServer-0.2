@@ -7,23 +7,13 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import me.greenem.server.tabCompleters.ModeCommandTabCompleter;
+
 
 public class MainClass extends JavaPlugin {
 	public Logger log = getLogger();
-//	private static volatile MainClass INSTANCE;
 	BukkitScheduler scheduler = getServer().getScheduler();
 	public Plugin plugin = this;
-	
-//	public static MainClass getInstance() {
-//		if(INSTANCE == null) {
-//			INSTANCE = this;
-//		}
-//		return INSTANCE;
-//	}
-//	
-//	public Plugin getPlugin() {
-//		return plugin;
-//	}
 	
 	@Override
 	public void onDisable() {
@@ -32,14 +22,18 @@ public class MainClass extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-//		INSTANCE = this;
 		RegisterAllEvents();
+		RegisterAllCommands();
 		MixedEvents.getInstance().onEnable();
 	}
 	
 	public void RegisterAllEvents() {
 		getServer().getPluginManager().registerEvents(MixedEvents.getInstance(), this);
 		getServer().getPluginManager().registerEvents(AuthEvents.getInstance(), this);
+	}
+	
+	public void RegisterAllCommands() {
+		getCommand("mode").setTabCompleter(new ModeCommandTabCompleter());
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){

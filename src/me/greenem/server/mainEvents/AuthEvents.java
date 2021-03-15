@@ -22,11 +22,15 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -37,7 +41,6 @@ import me.greenem.server.dataBase.MainDao;
 public class AuthEvents implements Listener {
 	public Plugin plugin = Bukkit.getPluginManager().getPlugin("GreenemServerMainPlugin");
 	public Logger log = plugin.getLogger();
-	public Properties props = new Properties();
 	private int maxAttempts = 5;
 	//final Random random = new Random(System.currentTimeMillis());
 	
@@ -111,14 +114,13 @@ public class AuthEvents implements Listener {
 						//e1.printStackTrace();
 					}
 					String dbLastRealLoginTime = "";
-					String dbLastCustomLoginTime = "";
+					//String dbLastCustomLoginTime = "";
 					if(dbValuesProfile!=null && !dbValuesProfile.isEmpty()) {
 						dbLastRealLoginTime = dbValuesProfile.get(0).toString();
-						dbLastCustomLoginTime = dbValuesProfile.get(1).toString();
+						//dbLastCustomLoginTime = dbValuesProfile.get(1).toString();
 					}
 					long timeNowInMiliseconds = Calendar.getInstance().getTimeInMillis();
-					if((Math.abs(Long.parseLong(dbLastRealLoginTime)-timeNowInMiliseconds) < maxTimeDifference) &&
-						(Math.abs(Long.parseLong(dbLastCustomLoginTime)-timeNowInMiliseconds) < maxTimeDifference)) {
+					if(!dbLastRealLoginTime.equals("") && Math.abs(Long.parseLong(dbLastRealLoginTime)-timeNowInMiliseconds) < maxTimeDifference) {
 						
 						p.sendTitle("", "");
 						p.sendMessage(ChatColor.GREEN + "You have already logged in before.");
@@ -315,7 +317,8 @@ public class AuthEvents implements Listener {
 				if (adress.endsWith("\\")) adress.substring(0, adress.length() - 1);
 				String port = Integer.toString(p.getAddress().getPort());
 				try {
-					 MainDao.getInstance().setAnything("players_authentication", "name", p.getName(), "password", args[0], "lastRealLoginTime", Long.toString(Calendar.getInstance().getTimeInMillis()), "lastLoginAdress", adress, "lastLoginPort", port);
+					MainDao.getInstance().setAnything("players_authentication", "name", p.getName(), "password", args[0], "lastLoginAdress", adress, "lastLoginPort", port);
+					MainDao.getInstance().setAnything("players_profiles", "name", p.getName(), "lastRealLoginTime", Calendar.getInstance().getTimeInMillis());
 				} catch (SQLException e) {
 					//e.printStackTrace();
 				}
@@ -353,7 +356,8 @@ public class AuthEvents implements Listener {
 				String adress = getPlayerAdress(p);
 				String port = getPlayerPort(p);
 				try {
-					 MainDao.getInstance().setAnything("players_authentication", "name", p.getName(), "lastRealLoginTime", Long.toString(Calendar.getInstance().getTimeInMillis()), "lastLoginAdress", adress, "lastLoginPort", port);
+					 MainDao.getInstance().setAnything("players_authentication", "name", p.getName(), "lastLoginAdress", adress, "lastLoginPort", port);
+					 MainDao.getInstance().setAnything("players_profiles", "name", p.getName(), "lastRealLoginTime", Calendar.getInstance().getTimeInMillis());
 				} catch (SQLException e) {
 					//e.printStackTrace();
 				}
@@ -387,34 +391,54 @@ public class AuthEvents implements Listener {
 		return result;
 	}
 	
-//	public int getPlayerAuthAttempts(Player p){
-//		String dbAttempts = null;
-//		int result = 0;
-//		try {
-//			dbAttempts = (String) MainDao.getInstance().getAnything("players_log_off_data", "name", p.getName(), "PasswordAttempts").toString();
-//		} catch (SQLException e) {
-//			//e.printStackTrace();
-//		}
-//		try {
-//			result = Integer.valueOf(dbAttempts).intValue();
-//		} catch (NumberFormatException e) {
-//			//ignore
-//		}
-//		return result;
-//	}
-//	
-//	public void setPlayerAuthAttempts(Player p, int attempts){
-//		try {
-//			 MainDao.getInstance().setAnything("players_log_off_data", "name", p.getName(), "PasswordAttempts", String.valueOf(attempts));
-//		} catch (SQLException e) {
-//			//e.printStackTrace();
-//		}
-//	}
+	@EventHandler
+    public void ChangeProfileOpFromPlayer(PlayerCommandPreprocessEvent e) {
+		boolean OppingEachOtherAllowed = true;
+    	if(e.getPlayer().isOp()) {
+    		int opParameters = 0; //0 - default(nothing), 1 - to become op, 2 - to be deoped
+    		if (e.getMessage().contains("/op") && e.getMessage().length() > 4) {
+    			opParameters = 1;
+    		}
+    		if (e.getMessage().contains("/deop") && e.getMessage().length() > 6) {
+    			opParameters = 2;
+    		}
+    		if(opParameters!=0) {
+    			//log.info(e.getMessage().substring(4));
+    			String p = "";
+    			if(opParameters==1) p = e.getMessage().substring(4);
+    			if(opParameters==2) p = e.getMessage().substring(6);
+    			if(p != "") {
+    				if(e.getPlayer().isOp() && OppingEachOtherAllowed) { //can player manage opps
+    					boolean PlayerRegistered = false;
+    					try {
+							PlayerRegistered = MainDao.getInstance().ifRowExists("players_profiles", "name", p);
+						} catch (SQLException e1) {
+							//e1.printStackTrace();
+						}
+    					if(PlayerRegistered) {
+    						if(opParameters==1) {
+    							try {
+    								MainDao.getInstance().setAnything("players_profiles", "name", p, "isOp", true);
+    							} catch (SQLException e1) {
+    								//e1.printStackTrace();
+    							}
+    						}
+    						if(opParameters==2) {
+    							try {
+    								MainDao.getInstance().setAnything("players_profiles", "name", p, "isOp", false);
+    							} catch (SQLException e1) {
+    								//e1.printStackTrace();
+    							}
+    						}
+    					}
+    				}
+    			}
+    		}
+    	}
+    }
 	
-//	@EventHandler
-//	public void PlayerQuitEvent(PlayerQuitEvent e){
-//		Player p = e.getPlayer();
-//	}
-	
-	//props.setProperty("lastLoginTime", Long.toString(Calendar.getInstance().getTimeInMillis()));
+	public void ChangeProfileOpFromConsole(CommandSender sender, Command cmd, String[] args) {
+		log.info("ChangeProfileOpFromConsole");
+		log.info((sender instanceof ConsoleCommandSender) + "");
+	}
 }

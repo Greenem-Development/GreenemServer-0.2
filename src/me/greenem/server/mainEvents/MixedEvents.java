@@ -421,7 +421,13 @@ public class MixedEvents implements Listener {
 					e.printStackTrace();
 				}
 		}
-		
+		else if(cmd.getName().equalsIgnoreCase("settime")){
+			ChangeTime(p, args);
+		}
+		else if(cmd.getName().equalsIgnoreCase("op") || cmd.getName().equalsIgnoreCase("deop")){
+			log.info("op");
+			AuthEvents.getInstance().ChangeProfileOpFromConsole(sender, cmd, args);
+		}
 		return false;
 	}
 	
@@ -701,11 +707,11 @@ public class MixedEvents implements Listener {
 	public void tpToSpawn(Player p) {
 		clearPlayer(p);
 		LeaveCurrentMinigame(p);
-		p.teleport(new Location(Bukkit.getWorld("Spawn"), 0.5, 101.5, 0.5));
 		//         T        U           T
 		if(!PlayersFlyInSurvival.contains(p.getName()) && p.getGameMode() != GameMode.CREATIVE && p.getGameMode() != GameMode.SPECTATOR) p.setAllowFlight(false);
 		if(!p.isOp() && !TrialStaffPlayers.contains(p.getName())) p.setGameMode(GameMode.SURVIVAL);
 		VanishOff(p);
+		p.teleport(new Location(Bukkit.getWorld("Spawn"), 0.5, 101.5, 0.5));
 		p.getWorld().setSpawnLocation(0, 101, 0);
 		
 		//log.info(p.getInventory().getSize() + "");
@@ -1900,6 +1906,9 @@ public class MixedEvents implements Listener {
 			if(args[0].equalsIgnoreCase("bw")){
 				BedWarsMinigameSpecifiedLobby(p, args);
 			}
+			if(args[0].equalsIgnoreCase("test")){
+				TestWorldSpecifiedLobby(p, args);
+			}
 		}
 	}
 	
@@ -2131,6 +2140,26 @@ public class MixedEvents implements Listener {
 				tpToSpawn(p);
 				p.teleport(new Location(Bukkit.getWorld("bedwars3"), 0, 102, 0));
 				p.getWorld().setTime(1000);
+			}
+		}
+	}
+	
+	public void TestWorldSpecifiedLobby (Player p, String[] args) {
+		if(args.length == 1) {
+			p.sendMessage(ChatColor.DARK_RED + "[Debug] Use arena number.");
+		}
+		if(args.length>1) {
+			if(args[1].equalsIgnoreCase("1")) {
+				tpToSpawn(p);
+				p.teleport(new Location(Bukkit.getWorld("testworld1"), 0, 102, 0));
+			}
+			if(args[1].equalsIgnoreCase("2")) {
+				tpToSpawn(p);
+				p.teleport(new Location(Bukkit.getWorld("testworld2"), 0, 102, 0));
+			}
+			if(args[1].equalsIgnoreCase("3")) {
+				tpToSpawn(p);
+				p.teleport(new Location(Bukkit.getWorld("testworld3"), 0, 102, 0));
 			}
 		}
 	}
@@ -2407,6 +2436,10 @@ public class MixedEvents implements Listener {
 		
 		getServer().createWorld(new WorldCreator("auth"));
 		getServer().createWorld(new WorldCreator("spawnnew"));
+		
+		getServer().createWorld(new WorldCreator("testworld1"));
+		getServer().createWorld(new WorldCreator("testworld2"));
+		getServer().createWorld(new WorldCreator("testworld3"));
 		
 		log.info("loaded other");
 	}
@@ -4539,68 +4572,6 @@ public class MixedEvents implements Listener {
     }
     
     @EventHandler
-    public void ChangeProfileOp(PlayerCommandPreprocessEvent e) {
-    	if(e.getPlayer().isOp()) {
-    	int Op = 0;
-    	if (e.getMessage().contains("/op")) {
-    		Op = 1;
-    	}
-    	if (e.getMessage().contains("/deop")) {
-    		Op = 2;
-    	}
-    	if(Op!=0) {
-    		//log.info(e.getMessage().substring(4));
-    		String p = "";
-			if(Op==1) p = e.getMessage().substring(4);
-			if(Op==2) p = e.getMessage().substring(6);
-    		if(p != "") {
-    			if(e.getPlayer().isOp()) {
-    				//Player p = e.get
-    				FileOutputStream fos = null;
-    				props.clear();
-    				FileReader reader = null;
-    				//log.info(props.toString());
-    				try {
-    					File f = new File(profilesDirectory, p+".properties");
-    					if (f.exists()) {
-    						try {
-    							reader = new FileReader(f);
-    						} catch (FileNotFoundException e1) {
-    							e1.printStackTrace();
-    						}
-    						props.load(reader);
-    						reader.close();
-    					}
-    					if(props.size() == 1 && Op == 2)
-    					{
-    						f.delete();
-    						return;
-    					}
-    					if(Op==1) props.setProperty("isOP", "1");
-    					if(Op==2) props.setProperty("isOP", "0");
-    					//log.info(props.toString());
-    					//if(props.getProperty("askForPasswordEveryTime")==null) props.setProperty("ask for password every time", "0");
-    					fos = new FileOutputStream(f);
-    					props.store(fos, "");
-    					//log.info("done");
-    				} catch (IOException e1) {
-    					e1.printStackTrace();
-    				} finally {
-    					if(fos != null) {
-    						try {
-    							fos.close();
-    						} catch (IOException e2) {
-    							e2.printStackTrace();
-    						}
-    					}
-    				}
-    			}
-    		}
-    	}
-    	}
-    }
-
-    @EventHandler
     public void DisableAuthMessages(PlayerChatEvent e) {
     	if(e.getPlayer().getWorld().getName().equals("auth") && AuthPlayers.contains(e.getPlayer())) {
     		if(!e.getMessage().startsWith("/")) {
@@ -5017,5 +4988,17 @@ public class MixedEvents implements Listener {
 	public void ExternalPlayerMoveEvent(PlayerMoveEvent e) { //disabled
 		//AuthEvents.getInstance().MoveEventNew1(e);
 		//log.info("new1");
+	}
+
+	public void ChangeTime(Player p, String[] args) {
+		if(p.isOp()) {
+			int time;
+			try {
+				time = Integer.valueOf(args[0]).intValue();
+				p.getWorld().setTime(time);
+			} catch (NumberFormatException e1) {
+				//ignore
+			}
+		}
 	}
 }
