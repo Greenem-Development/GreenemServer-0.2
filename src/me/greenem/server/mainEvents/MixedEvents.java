@@ -2153,13 +2153,17 @@ public class MixedEvents implements Listener {
 				tpToSpawn(p);
 				p.teleport(new Location(Bukkit.getWorld("testworld1"), 0, 102, 0));
 			}
-			if(args[1].equalsIgnoreCase("2")) {
+			else if(args[1].equalsIgnoreCase("2")) {
 				tpToSpawn(p);
 				p.teleport(new Location(Bukkit.getWorld("testworld2"), 0, 102, 0));
 			}
-			if(args[1].equalsIgnoreCase("3")) {
+			else if(args[1].equalsIgnoreCase("3")) {
 				tpToSpawn(p);
 				p.teleport(new Location(Bukkit.getWorld("testworld3"), 0, 102, 0));
+			}
+			else if(Bukkit.getWorld("testworld" + args[1]) != null) {
+				tpToSpawn(p);
+				p.teleport(new Location(Bukkit.getWorld("testworld" + args[1]), 0, 102, 0));
 			}
 		}
 	}

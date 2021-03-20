@@ -1,6 +1,7 @@
 package me.greenem.server.tabCompleters;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.command.Command;
@@ -24,10 +25,16 @@ public class ModeCommandTabCompleter implements TabCompleter {
 				list.add("tg");
 				list.add("au");
 				list.add("test");
-			}
-			for(String s : list) {
-				if(!args[0].startsWith(s)) {
-					list.remove(s);
+//				for(String s : list) {
+//					if(!args[0].startsWith(s)) {
+//						list.remove(s);
+//					}
+//				}
+				for (Iterator<String> it = list.iterator(); it.hasNext(); ) {
+					String s = it.next();
+				    if (args[0]!=null && !s.startsWith(args[0])) {
+				        it.remove();
+				    }
 				}
 			}
 			return list;

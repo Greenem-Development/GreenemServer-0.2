@@ -96,5 +96,8 @@ commands:
    settime:
       description: Test.
       default: true
+   horsebike:
+      description: Test.
+      default: true
 settings:
    moved-too-quickly-multiplier: 10000.0
