@@ -1,6 +1,7 @@
 package me.greenem.server.mainEvents;
 
 import me.greenem.server.*;
+import me.greenem.server.PluginMessages.OutcomingMessages;
 
 import static me.greenem.server.classes.FeatherFallingData.*;
 import static me.greenem.server.voids.SomeClass.*;
@@ -675,7 +676,11 @@ public class MixedEvents implements Listener {
 	
 	@EventHandler
 	public void DamageRulesManager(EntityDamageEvent e) {
+//		log.info(e.getEventName());
 		//log.info(e.getEntity().getType() + "");
+//		if (e.getEntity() instanceof Painting){
+//			log.info("painting EntityDamageEvent");
+//		}
 		if (e.getEntity().getType().toString().equals("PLAYER")){
 			log.info(e.getCause().toString());
 			if(!e.getCause().equals(DamageCause.VOID)) {
@@ -688,6 +693,31 @@ public class MixedEvents implements Listener {
 						e.setCancelled(true);
 						log.info("DamageRulesManager");
 					}
+				}
+			}
+		}
+	}
+	
+//	@EventHandler
+//	public void PaintingArrow2(EntityDamageByEntityEvent e) {
+//		log.info(e.getEventName());
+//		if(e.getEntity() instanceof Painting) {
+//			log.info("painting EntityDamageByEntityEvent");
+//		}
+//	}
+//	
+//	@EventHandler
+//	public void PaintingArrow3 (HangingBreakEvent e) {
+//		log.info(e.getEventName());
+//	}
+	
+	@EventHandler
+	public void PaintingArrow4 (HangingBreakByEntityEvent e) {
+//		log.info(e.getEventName());
+		if(e.getEntity() instanceof Painting) {
+			if(e.getRemover() instanceof Projectile) {
+				if(IfStringStartsWithArrayListEllement(e.getEntity().getWorld().getName(), MapListWithBreakingProtection)) {
+					e.setCancelled(true);
 				}
 			}
 		}
@@ -1628,7 +1658,7 @@ public class MixedEvents implements Listener {
 		sword.setRightArmPose(new EulerAngle(0, 0, 4.7));
 		sword.setItemInHand(new ItemStack(Material.IRON_SWORD));*/
 		
-		displayMatrix();
+		//displayMatrix();
 		
 		/*try {
 			loadInventory(p);
@@ -1637,6 +1667,9 @@ public class MixedEvents implements Listener {
 			e.printStackTrace();
 		}*/
 		//}
+		byte[] b = null;
+		b[0] = 1;
+		OutcomingMessages.getInstance().sendOutPluginMessage("my:testchannel1", p, b);
 	}
 	
 	public void DeprecatedFunction1(Player p) { // MOVED TO DOWN
@@ -2444,6 +2477,7 @@ public class MixedEvents implements Listener {
 		getServer().createWorld(new WorldCreator("testworld1"));
 		getServer().createWorld(new WorldCreator("testworld2"));
 		getServer().createWorld(new WorldCreator("testworld3"));
+		getServer().createWorld(new WorldCreator("testworld4"));
 		
 		log.info("loaded other");
 	}
@@ -2732,7 +2766,7 @@ public class MixedEvents implements Listener {
 	
 	@EventHandler
 	public void MurderMysteryArrowDidnnotTouchPlayers(ProjectileHitEvent e) {
-		log.info("ProjectileHitEvent");
+		//log.info("ProjectileHitEvent");
 //		if(e.getHitEntity() instanceof Painting) {
 //			log.info("painting");
 //			Painting painting = (Painting) e.getHitEntity();
@@ -2825,19 +2859,22 @@ public class MixedEvents implements Listener {
 		}
 		if(e.getEntity().getWorld().getName().startsWith("murdermystery")){
 			if(e.getEntity().getShooter() instanceof Player) {
-				if(e.getEntity() instanceof Projectile) {
-					Player p = (Player) e.getEntity().getShooter();
-					MinigameArena arena = GetArena(p);
-					if (arena!=null) {
-						log.info("Hit block with arrow");
-						log.info(p.toString());
-						log.info(arena.toString());
-						if(arena.DetectivesList.contains(p)) {
-							e.getEntity().remove();
-							AddItemStack(p, new ItemStack(Material.ARROW, 1), 9);
-						}
-					}
+				if(e.getEntity() instanceof Arrow) {
+					DetectiveShotInMurderMystery((Player) e.getEntity().getShooter(), (Arrow) e.getEntity());
 				}
+			}
+		}
+	}
+	
+	public void DetectiveShotInMurderMystery(Player p, Arrow arrow) {
+		MinigameArena arena = GetArena(p);
+		if (arena!=null) {
+			log.info("Hit block with arrow");
+			log.info(p.toString());
+			log.info(arena.toString());
+			if(arena.DetectivesList.contains(p)) {
+				arrow.remove();
+				AddItemStack(p, new ItemStack(Material.ARROW, 1), 9);
 			}
 		}
 	}
