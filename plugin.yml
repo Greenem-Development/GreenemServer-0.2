@@ -99,5 +99,8 @@ commands:
    horsebike:
       description: Test.
       default: true
+   myip:
+      description: Test.
+      default: true
 settings:
    moved-too-quickly-multiplier: 10000.0

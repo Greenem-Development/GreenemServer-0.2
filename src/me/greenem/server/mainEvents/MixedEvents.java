@@ -429,6 +429,9 @@ public class MixedEvents implements Listener {
 			log.info("op");
 			AuthEvents.getInstance().ChangeProfileOpFromConsole(sender, cmd, args);
 		}
+		else if(cmd.getName().equalsIgnoreCase("myip")){
+			p.sendMessage(p.getAddress().getHostString());
+		}
 		return false;
 	}
 	
@@ -3620,9 +3623,28 @@ public class MixedEvents implements Listener {
     		//if((FrozenPlayersFlyLocs.containsKey(p.getName()) && FrozenPlayersFlyLocs.get(p.getName()).getBlock().getLocation()!=p.getLocation().getBlock().getLocation()) || e.getFrom().getBlockX()!=e.getTo().getBlockX() || e.getFrom().getBlockY()!=e.getTo().getBlockY() || e.getFrom().getBlockY()!=e.getTo().getBlockZ()) {
     		if(!e.getFrom().equals(e.getTo())) {
     		//if(e.getFrom().getBlock().getLocation()!=e.getTo().getBlock().getLocation()) {
-    			Location loc = e.getFrom();
-    			loc.setDirection(e.getTo().getDirection());
-    			p.teleport(loc);
+    			
+    			
+    			
+//    			Location loc = FrozenPlayersFlyLocs.get(p.getName()); //new
+    			//Location loc = e.getFrom();
+//    			loc.setDirection(e.getTo().getDirection());
+//    			p.teleport(loc);
+    			
+    			
+    			Location loc = e.getTo().clone();
+//				float y = e.getTo().getYaw();
+//				float pt = e.getTo().getPitch();
+//				p.teleport(loc);
+//				p.getLocation().setYaw(y);
+//				p.getLocation().setPitch(pt);
+//				p.setAllowFlight(true);
+//				p.setFlying(true);
+				loc.setX(FrozenPlayersFlyLocs.get(p.getName()).getX());
+				loc.setY(FrozenPlayersFlyLocs.get(p.getName()).getY());
+				loc.setZ(FrozenPlayersFlyLocs.get(p.getName()).getZ());
+				//log.info(ChatColor.AQUA + "TP");
+				p.teleport(loc);
     		}
     	}
     	if(p.getWorld().getName().startsWith("jumprun")) {
@@ -3671,7 +3693,7 @@ public class MixedEvents implements Listener {
     		}
     	}
     }
-    
+   
     
     public boolean IsThereMaterialUnder(Player p, Material m, int distanse) {
     	Location loc = p.getLocation().add(0,2,0);
@@ -3809,6 +3831,7 @@ public class MixedEvents implements Listener {
     				p.spawnParticle(Particle.BLOCK_CRACK, new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()), 100, Material.LIGHT_BLUE_STAINED_GLASS.createBlockData());
     				FrozenPlayers.add(p.getName());
     				log.info("added");
+    				p.setAllowFlight(true); //new
     				if(!FrozenPlayersFlyLocs.containsKey(p.getName())) FrozenPlayersFlyLocs.put(p.getName(), p.getLocation());
         			if(!FrozenPlayersFlyState.containsKey(p.getName())) FrozenPlayersFlyState.put(p.getName(), p.getAllowFlight());
         			if(onGround(p)==false && p.getAllowFlight()==true) {
@@ -3923,7 +3946,6 @@ public class MixedEvents implements Listener {
         return null;
 	}
 
-	
 	public void GenerateCombinationsCodeFromeGame(Player p, Material material, int times, int combNum, int offsetOfoffset) {
 		int x = p.getLocation().getBlockX();
 		int y = p.getLocation().getBlockY()-1;

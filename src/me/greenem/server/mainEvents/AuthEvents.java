@@ -59,6 +59,7 @@ public class AuthEvents implements Listener {
 	
 	@EventHandler
 	public void PlayerPreJoinE (AsyncPlayerPreLoginEvent e) {
+		log.info("AsyncPlayerPreLoginEvent: " + e.getAddress().toString());
 		String pName = e.getName();
 		if(getServer().getPlayer(e.getName()) != null) { //если такой игрок уже онлайн
 			try {
@@ -86,6 +87,7 @@ public class AuthEvents implements Listener {
 		int maxPortDifference = 20000;
 		
 		Player p = e.getPlayer();
+		log.info("PlayerJoinEvent: " + p.getAddress().toString());
 		e.setJoinMessage("");
 		p.setOp(false);
 		ArrayList<Object> dbValues = null;

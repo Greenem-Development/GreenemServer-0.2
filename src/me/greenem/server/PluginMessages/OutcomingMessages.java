@@ -12,11 +12,13 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 import me.greenem.server.dataBase.MainDao;
+import me.greenem.server.mainEvents.MainClass;
 
 public class OutcomingMessages implements PluginMessageListener {
 	
 	private static volatile OutcomingMessages INSTANCE;
 	public Plugin plugin = Bukkit.getPluginManager().getPlugin("GreenemServerMainPlugin");
+	//public Plugin plugin = MainClass.getPlugin();
 
 	public static OutcomingMessages getInstance() {
 		if(INSTANCE == null) {
