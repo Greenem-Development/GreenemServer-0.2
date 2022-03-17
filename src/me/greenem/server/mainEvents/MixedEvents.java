@@ -581,7 +581,6 @@ public class MixedEvents implements Listener {
 
 	
 	@EventHandler(priority=EventPriority.NORMAL)
-	
 	public void PlayerInteractEvent(PlayerInteractEvent evt){
 		Player p = evt.getPlayer();
         //Block b = evt.getClickedBlock();
@@ -3649,7 +3648,10 @@ public class MixedEvents implements Listener {
     	}
     	if(p.getWorld().getName().startsWith("jumprun")) {
     		if(p.getGameMode()!=GameMode.CREATIVE && p.getGameMode()!=GameMode.SPECTATOR) {
-    			if(p.getLocation().getBlock().getRelative(BlockFace.DOWN).getType()==Material.EMERALD_BLOCK) {
+    			Material trampolineBlock = null;
+    			//trampolineBlock = Material.EMERALD_BLOCK;
+    			trampolineBlock = Material.SLIME_BLOCK;
+    			if(p.getLocation().getBlock().getRelative(BlockFace.DOWN).getType()==trampolineBlock) {
     				JumpBoostPlayer(p, 2, 0.5, 1.5);
     			}
     			if(onGround(p) == true) {
@@ -3826,9 +3828,30 @@ public class MixedEvents implements Listener {
     		if(p.getGameMode()!=GameMode.CREATIVE && p.getGameMode()!=GameMode.SPECTATOR) {
     		if((e.getHand()==EquipmentSlot.HAND || e.getHand()==EquipmentSlot.OFF_HAND || e.isBlockInHand()==false || e.getPlayer().getItemInHand().getType() == null) && (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
     			//log.info("Da");
+    			boolean isSoulLantern = false;
+    			boolean isNormalLantern = false;
     			Location loc = IsBlockNearby(p, Material.SOUL_LANTERN, 3);
     			if(loc != null) {
-    				p.spawnParticle(Particle.BLOCK_CRACK, new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()), 100, Material.LIGHT_BLUE_STAINED_GLASS.createBlockData());
+    				isSoulLantern = true;
+    			}
+    			else {
+    				loc = IsBlockNearby(p, Material.LANTERN, 3);
+    				if(loc != null) {
+    					isNormalLantern = true;
+        			}
+    			}
+    			if(isSoulLantern || isNormalLantern) {
+    				Material lineOf = null;
+    				
+    				if(isSoulLantern) {
+    					lineOf = Material.LIGHT_BLUE_STAINED_GLASS;
+    				}
+    				if(isNormalLantern) {
+    					//lineOf = Material.ORANGE_STAINED_GLASS;
+    					lineOf = Material.YELLOW_CONCRETE_POWDER;
+    				}
+    				
+    				p.spawnParticle(Particle.BLOCK_CRACK, new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ()), 100, lineOf.createBlockData());
     				FrozenPlayers.add(p.getName());
     				log.info("added");
     				p.setAllowFlight(true); //new
@@ -3848,6 +3871,8 @@ public class MixedEvents implements Listener {
         					//}
     					}
         			}, 2);
+        			boolean SoulLantern = isSoulLantern;
+    				boolean NormalLantern = isNormalLantern;
         			getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
         				@Override
         				public void run() {
@@ -3857,7 +3882,13 @@ public class MixedEvents implements Listener {
         						FrozenPlayersFlyLocs.remove(p.getName());
         						FrozenPlayersFlyState.remove(p.getName());
         						p.setAllowFlight(true);
-                				Vector v = p.getLocation().getDirection().multiply(1.2);
+        						Vector v = null;
+                				if(SoulLantern) {
+                					v = p.getLocation().getDirection().multiply(1.9);
+                				}
+                				if(NormalLantern) {
+                					v = p.getLocation().getDirection().multiply(1.1);
+                				}
                     			p.setVelocity(v);
                     			//p.playSound(p.getLocation(), Sound.ENTITY_IRON_GOLEM_ATTACK, 1, 1);
                     			p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 1, 1);
@@ -3905,7 +3936,11 @@ public class MixedEvents implements Listener {
 	//--------------------------------------------------------------------------------------------------------------------------------------------------
     */
 	
-	public Location IsBlockNearby(Player p, Material material, int distanse) {
+    public Location IsBlockNearby(Player p, Material material, int distanse) {
+    	return IsBlockNearby(p, material, distanse, distanse);
+    }
+    
+	public Location IsBlockNearby(Player p, Material material, int distanse, int realDistance) {
         ArrayList<Location> temp = new ArrayList<Location>();
         ArrayList<Double> dis = new ArrayList<Double>();
  
@@ -3919,7 +3954,9 @@ public class MixedEvents implements Listener {
             		//getServer().broadcastMessage(loc.getBlock().getType().toString());
                 	if(loc.getBlock().getType() == material) {
                 		//getServer().broadcastMessage("Latern: " + loc);
-                    	temp.add(loc.getBlock().getLocation());
+                		if(loc.getBlock().getLocation().distance(p.getLocation())<=realDistance) {
+                			temp.add(loc.getBlock().getLocation());
+                		}
                 	}
             		loc.setX(loc.getX()+1);
             	}

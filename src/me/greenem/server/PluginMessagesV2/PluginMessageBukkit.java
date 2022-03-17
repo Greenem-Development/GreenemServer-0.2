@@ -16,7 +16,7 @@ import com.google.common.io.ByteStreams;
 
 import me.greenem.server.mainEvents.MainClass;
 
-public class PluginMessageBukkit implements PluginMessageListener{
+public class PluginMessageBukkit implements PluginMessageListener {
 
 	public Plugin plugin = Bukkit.getPluginManager().getPlugin("GreenemServerMainPlugin");
 	
